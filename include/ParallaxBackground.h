@@ -4,7 +4,7 @@
 
 class ParallexBackground {
 private:
-    Background _background;
+    Background _backgrounds[3];
     Background _clouds[3];
     Background _grounds[3];
     Background _trees[3];

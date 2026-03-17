@@ -2,7 +2,11 @@
 
 
 ParallexBackground::ParallexBackground() :
-    _background("Resources/nature_5/1.png"),
+    _backgrounds{
+        Background("Resources/nature_5/1.png"),
+        Background("Resources/nature_5/1.png"),
+        Background("Resources/nature_5/1.png")
+    },
     _clouds{
         Background("Resources/nature_5/2.png"),
         Background("Resources/nature_5/2.png"),
@@ -24,23 +28,31 @@ ParallexBackground::ParallexBackground() :
 void ParallexBackground::Start()
 {
 
-    // _background.SetSpeed(-120.f);
-    
 
+    float playerSpeed = 120.f;
+
+    
+    
     for (int i = 0; i < 3; ++i) {
+
+        
+        _backgrounds[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
         _clouds[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
         _trees[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
         _grounds[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
-
-        _clouds[i].SetSpeed(-25.f);
-        _grounds[i].SetSpeed(-65.f);
-        _trees[i].SetSpeed(-120.f);
+        
+        _backgrounds[i].SetSpeed(playerSpeed);   
+        _clouds[i].SetSpeed(playerSpeed * 0.8f);  // 36  - distant
+        _grounds[i].SetSpeed(playerSpeed * 0.6f); // 72  - mid distance  
+        _trees[i].SetSpeed(playerSpeed * 0.f);   // 96  - close, almost full speed
     }
 }
 
 void ParallexBackground::Update(const float& deltaTime, const InputAxis& inputAxis) {
         
-    _background.Update(deltaTime, inputAxis);
+    for (auto& background : _backgrounds) {
+        background.Update(deltaTime, inputAxis);
+    }
 
     for (auto& cloud: _clouds) {
         cloud.Update(deltaTime, inputAxis);
@@ -56,7 +68,9 @@ void ParallexBackground::Update(const float& deltaTime, const InputAxis& inputAx
 }
 
 void ParallexBackground::Render(sf::RenderWindow& window) {
-    _background.Render(window);
+    for (Background& background : _backgrounds) {
+        background.Render(window);
+    }
     
     for (Background& cloud : _clouds) {
         cloud.Render(window);

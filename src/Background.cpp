@@ -19,12 +19,12 @@ void Background::Update(const float &deltaTime, const InputAxis& axis) {
     sf::Vector2f moveDirection = {_moveSpeed * deltaTime * axis.horizontal, 0.f};
     _sprite.move(moveDirection);
 
-    if (_sprite.getPosition().x < -1920) {
-        _sprite.setPosition({1920, 0});
-    }
-    else if (_sprite.getPosition().x > 1920) {
-        _sprite.setPosition({-1920, 0});
-    }
+    // if (_sprite.getPosition().x < -1920) {
+    //     _sprite.setPosition({1920, 0});
+    // }
+    // else if (_sprite.getPosition().x > 1920) {
+    //     _sprite.setPosition({-1920, 0});
+    // }
 
 }
 

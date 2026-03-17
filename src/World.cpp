@@ -16,11 +16,9 @@ void World::Start() {
 void World::Update(const float& deltaTime) {
 
     _inputHandler.Update(_window);
-    _camera.Update(deltaTime);
-    _background.Update(deltaTime, _inputHandler.GetAxis());
     _player.Update(deltaTime, _inputHandler, _camera);
-    
-    
+    _background.Update(deltaTime, _inputHandler.GetAxis());
+    _camera.Update(deltaTime);
 }
 
 void World::Render() {
