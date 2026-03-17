@@ -8,6 +8,8 @@ vendor/sfml/
 # because of licensing issue
 Resources/
 
+devlog/entries/template.md
+
 
 # SFML DLLs in root
 *.dll
