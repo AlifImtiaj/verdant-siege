@@ -37,7 +37,7 @@ void Player::Update(const float& deltaTime, const InputHandler& inputHandler, Ca
     if (inputHandler.GetMouseEvent().mouseDown && _playerState != PlayerState::ATTACKING) {
         _playerState = PlayerState::ATTACKING;
     }
-
+    Movement(camera, deltaTime, inputHandler.GetAxis().horizontal);
     PlayAnimation(deltaTime);
 }
 
@@ -124,5 +124,11 @@ void Player::FlipSprite() {
     }
 }
 
-void Player::Movement(Camera &camera, float horizontal) {
+void Player::Movement(Camera &camera, const float& deltaTime, float horizontal) {
+
+    if (_playerState == PlayerState::IDLE) return;
+
+    sf::Vector2f moveDirection = sf::Vector2f(120*deltaTime*horizontal, 0);
+    _playerSprite.move(moveDirection);
+    camera.Move(moveDirection);
 }

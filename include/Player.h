@@ -47,6 +47,6 @@ public:
 private:
     void PlayAnimation(const float& deltaTime);
     void FlipSprite();
-    void Movement(Camera& camera, float horizontal);
+    void Movement(Camera &camera, const float& deltaTime, float horizontal);
 
 };
