@@ -1,0 +1,25 @@
+# Build output
+build/
+*.exe
+
+# SFML vendor (too large, download separately)
+vendor/sfml/
+
+# SFML DLLs in root
+*.dll
+
+# PDB debug files
+*.pdb
+
+# CMake generated
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# VS Code
+.vscode/
+
+# Windows junk
+Thumbs.db
+desktop.ini
