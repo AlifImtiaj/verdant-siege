@@ -1,4 +1,3 @@
-// ParallexBackground.h
 #pragma once
 #include "Background.h"
 #include "InputHandler.h"
