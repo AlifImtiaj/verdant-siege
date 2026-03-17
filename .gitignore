@@ -5,6 +5,10 @@ build/
 # SFML vendor (too large, download separately)
 vendor/sfml/
 
+# because of licensing issue
+Resources/
+
+
 # SFML DLLs in root
 *.dll
 
