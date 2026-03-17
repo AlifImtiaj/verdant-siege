@@ -115,6 +115,8 @@ Development progress documented in [/devlog/entries](/devlog/entries)
 - Background assets from [craftpix.net](https://craftpix.net)
 - Character sprites — [Tiny RPG Character Asset Pack v1.03](https://zerie.itch.io/tiny-rpg-character-asset-pack) by zerie
 
+> Note: Asset files are not included in this repository. Download them from the links above and place them in the `Resources/` folder.
+
 ## License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
