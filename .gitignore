@@ -23,3 +23,5 @@ Makefile
 # Windows junk
 Thumbs.db
 desktop.ini
+
+run.ps1

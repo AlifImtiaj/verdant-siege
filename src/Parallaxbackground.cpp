@@ -1,4 +1,4 @@
-#include "ParallexBackground.h"
+#include "ParallaxBackground.h"
 
 
 ParallexBackground::ParallexBackground() :

@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "InputHandler.h"
-#include "ParallexBackground.h"
+#include "ParallaxBackground.h"
 #include "Player.h"
 #include "Camera.h"
 
