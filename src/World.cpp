@@ -18,7 +18,7 @@ void World::Update(const float& deltaTime) {
 
     InputAxis backgroundAxis = _player.ShouldBackgroundMove() ? _inputHandler.GetAxis() : InputAxis {};
 
-    _background.Update(deltaTime, backgroundAxis, _camera);
+    _background.Update(deltaTime, backgroundAxis, _camera, _player);
     _camera.Update(deltaTime);
 }
 

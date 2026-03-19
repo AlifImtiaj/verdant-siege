@@ -28,7 +28,8 @@ void Player::Start() {
 
 void Player::Update(const float& deltaTime, InputHandler& inputHandler, Camera& camera) {
     _inputHandler = inputHandler;
-    FlipSprite();
+    if (_playerState != PlayerState::ATTACKING)
+        FlipSprite();
 
     bPlayerMoving = false;
     bShouldBackgroundMove = false;

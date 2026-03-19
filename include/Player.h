@@ -60,7 +60,8 @@ public:
 
     const bool& IsPlayerMoving() const { return bPlayerMoving; }
     const bool& ShouldBackgroundMove() const { return bShouldBackgroundMove; }
-    const sf::Vector2f& GetPlayerPosition() const { return _playerSprite.getPosition(); }
+    const sf::Vector2f GetPlayerPosition() const { return _playerSprite.getPosition(); }
+    const float GetWalkSpeed() const { return _walkSpeed; }
 
 private:
     void PlayAnimation(const float& deltaTime);
