@@ -3,7 +3,7 @@
 
 World::World(InputHandler& inputHandler, sf::RenderWindow& window) : _inputHandler(inputHandler),
  _window(window),
-  _camera(window, (sf::Vector2f)window.getSize()),
+  _camera(window, {1280.f, 720.f}),
   _player(window) {
 }
 
@@ -14,10 +14,11 @@ void World::Start() {
 }
 
 void World::Update(const float& deltaTime) {
-
-    _inputHandler.Update(_window);
     _player.Update(deltaTime, _inputHandler, _camera);
-    _background.Update(deltaTime, _inputHandler.GetAxis());
+
+    InputAxis backgroundAxis = _player.ShouldBackgroundMove() ? _inputHandler.GetAxis() : InputAxis {};
+
+    _background.Update(deltaTime, backgroundAxis, _camera);
     _camera.Update(deltaTime);
 }
 

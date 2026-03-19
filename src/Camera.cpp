@@ -13,6 +13,15 @@ void Camera::Update(const float& deltaTime) {
     _window.setView(_mainCamera);
 }
 
-void Camera::Move(sf::Vector2f moveDirection) {
+void Camera::SetPosition(sf::Vector2f position) {
+    _mainCamera.setCenter(position);
+}
+
+void Camera::Move(sf::Vector2f moveDirection)
+{
     _mainCamera.move(moveDirection);
+}
+
+void Camera::SetSize(sf::Vector2f size) {
+    _mainCamera.setSize(size);
 }

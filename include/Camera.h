@@ -13,7 +13,11 @@ public:
     Camera(sf::RenderWindow& window, sf::Vector2f resolution);
     void Start();
     void Update(const float& deltaTime);
+    
+    void SetPosition (sf::Vector2f position);
     void Move(sf::Vector2f moveDirection);
     const sf::View& GetCamera() const { return _mainCamera; }
+    
+    void SetSize(sf::Vector2f size);
 
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include "Background.h"
 #include "InputHandler.h"
+#include "Camera.h"
 
 class ParallexBackground {
 private:
@@ -12,6 +13,6 @@ private:
 public:
     ParallexBackground();
     void Start();
-    void Update(const float& deltaTime, const InputAxis& inputAxis);
+    void Update(const float& deltaTime, const InputAxis& inputAxis, Camera& camera);
     void Render(sf::RenderWindow& window);
 };
