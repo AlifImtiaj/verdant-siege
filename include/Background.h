@@ -16,7 +16,7 @@ private:
 public:
     Background(const std::filesystem::path filePath);
     void SetSpeed(float moveSpeed);
-    void Update(const float& deltaTime, const InputAxis& axis);
+    void Update(const float& deltaTime, const InputAxis& axis, const sf::Vector2f& playerPosition);
     void Render(sf::RenderWindow& window);
 
     void SetPosition(sf::Vector2f position);

@@ -1,6 +1,5 @@
 #include "ParallaxBackground.h"
 
-
 ParallexBackground::ParallexBackground() :
     _backgrounds{
         Background("Resources/nature_5/1.png"),
@@ -27,48 +26,52 @@ ParallexBackground::ParallexBackground() :
 
 void ParallexBackground::Start()
 {
-    float playerSpeed = 120.f;
-    
     for (int i = 0; i < 3; ++i) {
-
-        // _backgrounds[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
+        // evenly places the background sprites
         _clouds[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
         _trees[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
         _grounds[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
-        
-        _clouds[i].SetSpeed(playerSpeed * 0.8f);  // 36  - distant
-        _grounds[i].SetSpeed(playerSpeed * 0.6f); // 72  - mid distance  
-        _trees[i].SetSpeed(playerSpeed * 0.f);   // 96  - close, almost full speed
+
     }
 }
 
-void ParallexBackground::Update(const float& deltaTime, const InputAxis& inputAxis, Camera& camera) {
+
+float previousSpeed;
+float currentSpeed = 0.f;
+void ParallexBackground::Update(const float& deltaTime, const InputAxis& inputAxis, Camera& camera, const Player& player) {
     
     // to position the background to be center always
     sf::Vector2f cameraCenter = camera.GetCamera().getCenter();
-
     _backgrounds[0].SetPosition({cameraCenter.x - 640.f, 0.f});
-    // for (int i = 0; i < 3; ++i) {
-    //     _backgrounds[i].SetPosition({cameraCenter.x - 1280.f + (1280.f * i), 0.f});
-    // }
 
+    float scrollSpeed = player.GetWalkSpeed();
+    previousSpeed = scrollSpeed;
+    // run this part of code only when speed is changed, not every update loop
+    if (previousSpeed != currentSpeed) {
+        for (int i = 0; i < 3; ++i) {
+            _clouds[i].SetSpeed(scrollSpeed * 0.8f);  // 80% of player speed, making it feel like farthest
+            _grounds[i].SetSpeed(scrollSpeed * 0.6f); // 60% of player speed, make it far, but not far away as like the clouds
+            _trees[i].SetSpeed(scrollSpeed * 0.f);   // static
+        }
+                
+    }
+    currentSpeed = previousSpeed;
+
+    sf::Vector2f position = player.GetPlayerPosition();
     for (auto& cloud: _clouds) {
-        cloud.Update(deltaTime, inputAxis);
+        cloud.Update(deltaTime, inputAxis, position);
     }
 
     for (auto& ground: _grounds) {
-        ground.Update(deltaTime, inputAxis);
+        ground.Update(deltaTime, inputAxis, position);
     }
 
     for (auto& tree: _trees) {
-        tree.Update(deltaTime, inputAxis);
+        tree.Update(deltaTime, inputAxis, position);
     }
 }
 
 void ParallexBackground::Render(sf::RenderWindow& window) {
-    // for (Background& background : _backgrounds) {
-    //     background.Render(window);
-    // }
 
     _backgrounds[0].Render(window);
     

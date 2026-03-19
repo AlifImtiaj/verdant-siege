@@ -2,6 +2,7 @@
 #include "Background.h"
 #include "InputHandler.h"
 #include "Camera.h"
+#include "Player.h"
 
 class ParallexBackground {
 private:
@@ -13,6 +14,10 @@ private:
 public:
     ParallexBackground();
     void Start();
-    void Update(const float& deltaTime, const InputAxis& inputAxis, Camera& camera);
+    void Update(const float& deltaTime,
+            const InputAxis& inputAxis,
+            Camera& camera,
+            const Player& player
+        );
     void Render(sf::RenderWindow& window);
 };
