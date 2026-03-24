@@ -5,6 +5,10 @@
 #include "World.h"
 #include "InputHandler.h"
 
+#ifdef _DEBUG
+    inline bool DEBUG_DRAW = false;
+#endif
+
 class Engine {
 private:
     sf::RenderWindow _window;
