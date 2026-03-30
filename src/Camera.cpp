@@ -19,6 +19,9 @@ void Camera::SetPosition(sf::Vector2f position) {
 
 void Camera::Move(sf::Vector2f moveDirection)
 {
+    // setting moveDirection causing camera to move up and down while the player is walking
+    // to the edges of the screen and jumping at the same time
+    moveDirection.y = 0;
     _mainCamera.move(moveDirection);
 }
 

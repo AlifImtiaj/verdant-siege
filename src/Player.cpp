@@ -20,9 +20,10 @@ _window(window)
 
 void Player::Start() {
     _playerState = PlayerState::IDLE;
-    _playerSprite.setPosition({300, 625});
+    _playerSprite.setPosition({250, 550});
 
-    _rb = RigidBody(sf::FloatRect({250, 575}, {100,100}), ColliderType::DYNAMIC, ColliderTag::PLAYER);
+    
+    _rb = RigidBody(sf::FloatRect({_playerSprite.getPosition().x , _playerSprite.getPosition().y}, {100,100}), ColliderType::DYNAMIC, ColliderTag::PLAYER);
 }
 
 void Player::Update(const float& deltaTime, InputHandler& inputHandler) {
@@ -34,9 +35,11 @@ void Player::Update(const float& deltaTime, InputHandler& inputHandler) {
     bShouldBackgroundMove = false;
     _currentAnimationTimer += deltaTime;
 
+
     ChangeState(_inputHandler);
     Movement(deltaTime, inputHandler);
     UpdateAnimation();
+    SetPosition();
 }
 
 void Player::Render() {
@@ -66,7 +69,17 @@ void Player::PlayAnimation(sf::Texture& texture, int keyFrame) {
     }
 }
 
-void Player::UpdateAnimation() {
+void Player::SetPosition() {
+    _position = _rb.GetCollider().GetBounds().position;
+    // to offset position to the center of the collider
+    _position.x += 50.f;
+    _position.y += 50.f;
+    // update sprite position
+    _playerSprite.setPosition(_position);
+}
+
+void Player::UpdateAnimation()
+{
     if (_playerState == PlayerState::IDLE)
         PlayAnimation(_playerIdleTexture, _idleKeyFrames);
     else if (_playerState == PlayerState::WALKING)
@@ -89,31 +102,36 @@ void Player::FlipSprite() {
 
 void Player::Movement(const float& deltaTime, InputHandler& inputHandler) {
 
-    float horizontal = inputHandler.GetAxis().horizontal;
-    float vertical = inputHandler.GetAxis().vertical;
+    // add to devlog
+    // to make the physics work. i need to get the velocity from rb
+    // then just update the x
+    sf::Vector2f moveDirection = _rb.GetVelocity();
 
-    sf::Vector2f moveDirection = sf::Vector2f(_walkSpeed*deltaTime*horizontal, 0);
-    _rb.SetVelocity(moveDirection);
-    _position = _rb.GetCollider().GetBounds().position;
-    _position.x += 50.f;
-    _position.y += 50.f;
-    _playerSprite.setPosition(_position);
-
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && _rb.IsGrounded())
+        moveDirection.y = -250;
+    
+    
     if (_playerState == PlayerState::IDLE || _playerState == PlayerState::ATTACKING) {
-        _rb.SetVelocity({0,0});
+        moveDirection.x = 0;
+        _rb.SetVelocity(moveDirection);
         return;
     }
+
+    float horizontal = inputHandler.GetAxis().horizontal;
+    float vertical = inputHandler.GetAxis().vertical;
+    moveDirection.x = _walkSpeed*horizontal;
+    _rb.SetVelocity(moveDirection);
 
     bPlayerMoving = true;
 
     sf::Vector2f cameraPosition = _camera.GetCamera().getCenter();
     
     if (horizontal == 1.f && (_position.x - cameraPosition.x) > 400.f) {
-        _camera.Move(moveDirection);
+        _camera.Move(moveDirection*deltaTime);
         bShouldBackgroundMove = true;
     }
     if (horizontal == -1.f & ((cameraPosition.x - _position.x) > 400.f)) {
-        _camera.Move(moveDirection);
+        _camera.Move(moveDirection*deltaTime);
         bShouldBackgroundMove = true;
     }
 }

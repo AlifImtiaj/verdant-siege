@@ -11,7 +11,10 @@ void World::Start() {
     _background.Start();
     _player.Start();
     _camera.Start();
+
+    
     _physics.AddRigidBody(_player.GetRigidBody());
+    _physics.SetCollider(_background.GetRigidBody()->GetCollider());
 }
 
 void World::Update(const float& deltaTime) {

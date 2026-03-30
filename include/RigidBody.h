@@ -26,6 +26,6 @@ public:
     const Collider& GetCollider() const { return _collider; }
     Collider& GetCollider() { return _collider; }
 
-    void Update();
+    void Update(const float& deltaTime);
 
 };

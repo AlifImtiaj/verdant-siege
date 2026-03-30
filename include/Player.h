@@ -69,7 +69,7 @@ public:
     const bool& ShouldBackgroundMove() const { return bShouldBackgroundMove; }
 
     // getter setter
-    const sf::Vector2f GetPosition() const { return _playerSprite.getPosition(); }
+    const sf::Vector2f GetPosition() const { return _position; }
     void SetPosition(sf::Vector2f position) { _position = position; }
 
     const float GetWalkSpeed() const { return _walkSpeed; }
@@ -77,10 +77,10 @@ public:
 
 
 private:
+    void SetPosition();
     void UpdateAnimation();
+    void PlayAnimation(sf::Texture& texture, int keyFrame);
     void FlipSprite();
     void Movement(const float& deltaTime, InputHandler& inputHandler);
     void ChangeState(InputHandler& inputHandler);
-
-    void PlayAnimation(sf::Texture& texture, int keyFrame);
 };

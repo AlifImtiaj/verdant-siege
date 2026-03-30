@@ -21,4 +21,7 @@ public:
             const Player& player
         );
     void Render(sf::RenderWindow& window);
+
+
+    RigidBody* GetRigidBody() { return &_rb; }
 };

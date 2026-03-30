@@ -19,5 +19,5 @@ public:
 private:
     void ApplyGravity(RigidBody* rb, const float& deltaTime);
     void ResolveCollision(RigidBody* rb);
-    void Resolve(RigidBody* rb, const Collider& staticCollider);
+    bool CheckCollision(RigidBody* rb);
 };
