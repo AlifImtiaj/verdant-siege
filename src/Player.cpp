@@ -1,14 +1,11 @@
 #include "Player.h"
 
-#include <imgui.h>
-#include <imgui-SFML.h>
-
-Player::Player(sf::RenderWindow& window) : _playerSprite(_playerIdleTexture),
+Player::Player(sf::RenderWindow& window, Camera& camera) : _playerSprite(_playerIdleTexture), _camera(camera),
 _window(window)
 {
-    if (!_playerIdleTexture.loadFromFile(_idleTexturePath)) { printf("Idle texture couldn't be loaded"); }
-    if (!_playerWalkTexture.loadFromFile(_walkTexturePath)) { printf("Walk texture couldn't be loaded"); }
-    if (!_playerAttackTexture.loadFromFile(_attackTexturePath)) { printf("Idle texture couldn't be loaded"); }
+    if (!_playerIdleTexture.loadFromFile(_idleTexturePath)) { printf("Idle texture couldn't be loaded\n"); }
+    if (!_playerWalkTexture.loadFromFile(_walkTexturePath)) { printf("Walk texture couldn't be loaded\n"); }
+    if (!_playerAttackTexture.loadFromFile(_attackTexturePath)) { printf("Idle texture couldn't be loaded\n"); }
 
     _playerIdleTexture.setSmooth(false);
     _playerWalkTexture.setSmooth(false);
@@ -24,101 +21,58 @@ _window(window)
 void Player::Start() {
     _playerState = PlayerState::IDLE;
     _playerSprite.setPosition({300, 625});
+
+    _rb = RigidBody(sf::FloatRect({250, 575}, {100,100}), ColliderType::DYNAMIC, ColliderTag::PLAYER);
 }
 
-void Player::Update(const float& deltaTime, InputHandler& inputHandler, Camera& camera) {
+void Player::Update(const float& deltaTime, InputHandler& inputHandler) {
     _inputHandler = inputHandler;
     if (_playerState != PlayerState::ATTACKING)
         FlipSprite();
 
     bPlayerMoving = false;
     bShouldBackgroundMove = false;
+    _currentAnimationTimer += deltaTime;
 
-    if (_playerState != PlayerState::ATTACKING) {
-        if (inputHandler.GetAxis().horizontal != 0) {
-            _playerState = PlayerState::WALKING;
-        }
-        else {
-            _playerState = PlayerState::IDLE;
-        }
-    }
-
-    if (inputHandler.GetMouseEvent().mouseDown && _playerState != PlayerState::ATTACKING) {
-        _playerState = PlayerState::ATTACKING;
-    }
-    Movement(camera, deltaTime, inputHandler);
-    PlayAnimation(deltaTime);
+    ChangeState(_inputHandler);
+    Movement(deltaTime, inputHandler);
+    UpdateAnimation();
 }
 
 void Player::Render() {
     _window.draw(_playerSprite);
+    #ifdef _DEBUG
+        _rb.GetCollider().DebugDraw(_window);
+    #endif
 }
 
-
-
-void Player::PlayAnimation(const float &deltaTime) {
-    _currentAnimationTimer += deltaTime;
-
-    if (_playerState == PlayerState::IDLE) {
-
-        // changes the texture, this code only run once every state changes
-        if (&_playerSprite.getTexture() != &_playerIdleTexture) {
-            _playerSprite.setTexture(_playerIdleTexture);
-            _currentWalkKeyFrame = 0;
-            _currentIdleKeyFrame = 0;  
-            _currentAnimationTimer = 0.f;  
-            _playerSprite.setTextureRect(sf::IntRect({0, 0}, {100, 100}));
-        }
-
-        if (_currentAnimationTimer > _animationDelay) {
-            _playerSprite.setTextureRect(sf::IntRect({_currentIdleKeyFrame * 100, 0}, {100,100}));
-            _currentAnimationTimer = 0.f;
-            _currentIdleKeyFrame++;
-            if (_currentIdleKeyFrame >= _idleKeyFrames) _currentIdleKeyFrame = 0;
-
-        }
+void Player::PlayAnimation(sf::Texture& texture, int keyFrame) {
+    // changes the texture, this code only run once every state changes
+    if (&_playerSprite.getTexture() != &texture) {
+        _playerSprite.setTexture(texture);
+        _currentKeyFrame = 0;
+        _playerSprite.setTextureRect(sf::IntRect({0, 0}, {100, 100}));
     }
 
-    else if (_playerState == PlayerState::WALKING) {
-        // changes the texture, this code only run once every state changes
-        if (&_playerSprite.getTexture() != &_playerWalkTexture) {
-            _playerSprite.setTexture(_playerWalkTexture);
-            _currentIdleKeyFrame = 0;
-            _currentWalkKeyFrame = 0;  
-            _currentAnimationTimer = 0.f;
-            _playerSprite.setTextureRect(sf::IntRect({0, 0}, {100, 100})); 
-        }
-
-        if (_currentAnimationTimer > _animationDelay) {
-            _playerSprite.setTextureRect(sf::IntRect({_currentWalkKeyFrame * 100, 0}, {100, 100}));
-            _currentAnimationTimer = 0.f;
-            _currentWalkKeyFrame++;
-            if (_currentWalkKeyFrame >= _walkKeyFrames) _currentWalkKeyFrame = 0;
-        }
-    }
-
-    else if (_playerState == PlayerState::ATTACKING) {
-        // changes the texture, this code only run once every state changes
-        if (&_playerSprite.getTexture() != &_playerAttackTexture) {
-            _playerSprite.setTexture(_playerAttackTexture);
-            _currentIdleKeyFrame = 0;
-            _currentWalkKeyFrame = 0; 
-            _currentAttackKeyFrame = 0; 
-            _currentAnimationTimer = 0.f;
-            _playerSprite.setTextureRect(sf::IntRect({0, 0}, {100, 100})); 
-        }
-
-        if (_currentAnimationTimer > _animationDelay) {
-            _playerSprite.setTextureRect(sf::IntRect({_currentAttackKeyFrame * 100, 0}, {100, 100}));
-            _currentAnimationTimer = 0.f;
-            _currentAttackKeyFrame++;
-
-            if (_currentAttackKeyFrame >= _attackKeyFrames) {
-                _currentAttackKeyFrame = 0;
+    if (_currentAnimationTimer > _animationDelay) {
+        _playerSprite.setTextureRect(sf::IntRect({_currentKeyFrame * 100, 0}, {100,100}));
+        _currentAnimationTimer = 0.f;
+        _currentKeyFrame++;
+        if (_currentKeyFrame >= keyFrame) {
+            _currentKeyFrame = 0;
+            if (_playerState == PlayerState::ATTACKING)
                 _playerState = PlayerState::IDLE;
-            }
         }
     }
+}
+
+void Player::UpdateAnimation() {
+    if (_playerState == PlayerState::IDLE)
+        PlayAnimation(_playerIdleTexture, _idleKeyFrames);
+    else if (_playerState == PlayerState::WALKING)
+        PlayAnimation(_playerWalkTexture, _walkKeyFrames);
+    else if (_playerState == PlayerState::ATTACKING) 
+        PlayAnimation(_playerAttackTexture, _attackKeyFrames);
 }
 
 void Player::FlipSprite() {
@@ -133,28 +87,49 @@ void Player::FlipSprite() {
     }
 }
 
-void Player::Movement(Camera &camera, const float& deltaTime, InputHandler& inputHandler) {
-    if (_playerState == PlayerState::IDLE || _playerState == PlayerState::ATTACKING) return;
-
-    bPlayerMoving = true;
+void Player::Movement(const float& deltaTime, InputHandler& inputHandler) {
 
     float horizontal = inputHandler.GetAxis().horizontal;
     float vertical = inputHandler.GetAxis().vertical;
-    
+
     sf::Vector2f moveDirection = sf::Vector2f(_walkSpeed*deltaTime*horizontal, 0);
+    _rb.SetVelocity(moveDirection);
+    _position = _rb.GetCollider().GetBounds().position;
+    _position.x += 50.f;
+    _position.y += 50.f;
+    _playerSprite.setPosition(_position);
 
-    sf::Vector2f playerPosition = _playerSprite.getPosition();
-    sf::Vector2f cameraPosition = camera.GetCamera().getCenter();
+    if (_playerState == PlayerState::IDLE || _playerState == PlayerState::ATTACKING) {
+        _rb.SetVelocity({0,0});
+        return;
+    }
 
+    bPlayerMoving = true;
 
-
-    _playerSprite.move(moveDirection);
-    if (horizontal == 1.f && (playerPosition.x - cameraPosition.x) > 400.f) {
-        camera.Move(moveDirection);
+    sf::Vector2f cameraPosition = _camera.GetCamera().getCenter();
+    
+    if (horizontal == 1.f && (_position.x - cameraPosition.x) > 400.f) {
+        _camera.Move(moveDirection);
         bShouldBackgroundMove = true;
     }
-    if (horizontal == -1.f & ((cameraPosition.x - playerPosition.x) > 400.f)) {
-        camera.Move(moveDirection);
+    if (horizontal == -1.f & ((cameraPosition.x - _position.x) > 400.f)) {
+        _camera.Move(moveDirection);
         bShouldBackgroundMove = true;
     }
 }
+
+void Player::ChangeState(InputHandler &inputHandler) {
+    if (_playerState != PlayerState::ATTACKING) {
+        if (inputHandler.GetAxis().horizontal != 0) {
+            _playerState = PlayerState::WALKING;
+        }
+        else {
+            _playerState = PlayerState::IDLE;
+        }
+    }
+    if (inputHandler.GetMouseEvent().mouseDown && _playerState != PlayerState::ATTACKING) {
+        _playerState = PlayerState::ATTACKING;
+    }
+}
+
+
