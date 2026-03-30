@@ -3,6 +3,7 @@
 #include "InputHandler.h"
 #include "Camera.h"
 #include "Player.h"
+#include "RigidBody.h"
 
 class ParallexBackground {
 private:
@@ -10,7 +11,7 @@ private:
     Background _clouds[3];
     Background _grounds[3];
     Background _trees[3];
-
+    RigidBody _rb;
 public:
     ParallexBackground();
     void Start();

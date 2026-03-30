@@ -1,4 +1,5 @@
 #include "ParallaxBackground.h"
+#include "imgui.h"
 
 ParallexBackground::ParallexBackground() :
     _backgrounds{
@@ -26,6 +27,7 @@ ParallexBackground::ParallexBackground() :
 
 void ParallexBackground::Start()
 {
+    _rb = RigidBody(sf::FloatRect({0,675}, {2000,50}), ColliderType::STATIC, ColliderTag::PLATFORM);
     for (int i = 0; i < 3; ++i) {
         // evenly places the background sprites
         _clouds[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
@@ -57,7 +59,7 @@ void ParallexBackground::Update(const float& deltaTime, const InputAxis& inputAx
     }
     currentSpeed = previousSpeed;
 
-    sf::Vector2f position = player.GetPlayerPosition();
+    sf::Vector2f position = player.GetPosition();
     for (auto& cloud: _clouds) {
         cloud.Update(deltaTime, inputAxis, position);
     }
@@ -85,4 +87,7 @@ void ParallexBackground::Render(sf::RenderWindow& window) {
     for (auto& tree: _trees) {
         tree.Render(window);
     }
+    #ifdef _DEBUG
+        _rb.GetCollider().DebugDraw(window);
+    #endif
 }

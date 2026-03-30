@@ -4,17 +4,21 @@
 World::World(InputHandler& inputHandler, sf::RenderWindow& window) : _inputHandler(inputHandler),
  _window(window),
   _camera(window, {1280.f, 720.f}),
-  _player(window) {
+  _player(window, _camera) {
 }
 
 void World::Start() {
     _background.Start();
     _player.Start();
     _camera.Start();
+    _physics.AddRigidBody(_player.GetRigidBody());
 }
 
 void World::Update(const float& deltaTime) {
-    _player.Update(deltaTime, _inputHandler, _camera);
+
+    _physics.Update(deltaTime);
+
+    _player.Update(deltaTime, _inputHandler);
 
     InputAxis backgroundAxis = _player.ShouldBackgroundMove() ? _inputHandler.GetAxis() : InputAxis {};
 

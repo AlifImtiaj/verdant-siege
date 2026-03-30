@@ -5,6 +5,7 @@
 #include "InputHandler.h"
 #include "ParallaxBackground.h"
 #include "Player.h"
+#include "PhysicsWorld.h"
 #include "Camera.h"
 
 class World {
@@ -15,6 +16,9 @@ private:
 
     ParallexBackground _background;
     Player _player;
+
+    PhysicsWorld _physics;
+    float deltaTime;
 
 public:
     World(InputHandler& inputHandler, sf::RenderWindow& window); // use constructor only to assign values, dont do any instructions here, causes bug sometime
