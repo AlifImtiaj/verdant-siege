@@ -1,5 +1,5 @@
 cd build
-cd Release
+cd Debug
 ./Siege
 cd ..
 cd ..
