@@ -11,8 +11,8 @@
 class World {
 private:
     InputHandler& _inputHandler;
-    Camera _camera;
     sf::RenderWindow& _window;
+    Camera _camera;
 
     ParallexBackground _background;
     Player _player;

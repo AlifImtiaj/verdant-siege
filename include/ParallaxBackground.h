@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+
 #include "Background.h"
 #include "InputHandler.h"
 #include "Camera.h"
@@ -11,7 +13,7 @@ private:
     Background _clouds[3];
     Background _grounds[3];
     Background _trees[3];
-    RigidBody _rb;
+    std::vector<RigidBody> _rb;
 public:
     ParallexBackground();
     void Start();
@@ -23,5 +25,5 @@ public:
     void Render(sf::RenderWindow& window);
 
 
-    RigidBody* GetRigidBody() { return &_rb; }
+    std::vector<RigidBody>& GetRigidBody() { return _rb; }
 };
