@@ -71,11 +71,11 @@ cd verdant-siege
 mkdir build
 cd build
 
-# Generate build files
-cmake ..
+# Generate build files for Release configuration
+cmake .. -G "Visual Studio 15 2017" -A x64 -DCMAKE_BUILD_TYPE=Release
 
-# Build
-cmake --build .
+# Build the Release configuration
+cmake --build . --config Release
 ```
 
 ### Running
@@ -109,10 +109,12 @@ Development progress documented in [/devlog/entries](/devlog/entries)
 | 2026-03-14 | [Project Setup](/devlog/entries/2026-03-14-setup.md) |
 | 2026-03-15 | [Player Setup](/devlog/entries/2026-03-15-player-setup.md) |
 | 2026-03-17 | [Camera](/devlog/entries/2026-03-17-camera.md) |
+| 2026-03-26 | [Dear ImGui](/devlog/entries/2026-03-24-ImGui.md)
+| 2026-04-02 | [Physics System](/devlog/entries/2026-04-02-Physics-System-&-Ground-Collision.md)
 
 ## Assets
 
-- Background assets from [craftpix.net](https://craftpix.net)
+- Background assets - [Nature Landscapes Free Pixel Art](https://free-game-assets.itch.io/nature-landscapes-free-pixel-art) by [CraftPix](https://craftpix.net)
 - Character sprites — [Tiny RPG Character Asset Pack v1.03](https://zerie.itch.io/tiny-rpg-character-asset-pack) by zerie
 
 > Note: Asset files are not included in this repository. Download them from the links above and place them in the `Resources/` folder.
