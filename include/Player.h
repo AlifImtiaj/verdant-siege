@@ -60,7 +60,7 @@ private:
     Camera& _camera;
 
 public:
-    Player(sf::RenderWindow& window, Camera& camera);
+    Player(sf::RenderWindow& window, Camera& camera, sf::Vector2f position);
     void Start();
     void Update(const float& deltaTime, InputHandler& inputHandler);
     void Render();
@@ -69,18 +69,18 @@ public:
     const bool& ShouldBackgroundMove() const { return bShouldBackgroundMove; }
 
     // getter setter
-    const sf::Vector2f GetPosition() const { return _playerSprite.getPosition(); }
     void SetPosition(sf::Vector2f position) { _position = position; }
+    const sf::Vector2f GetPosition() const { return _position; }
 
     const float GetWalkSpeed() const { return _walkSpeed; }
     RigidBody* GetRigidBody() { return &_rb; }
 
 
 private:
+    void SetPosition();
     void UpdateAnimation();
+    void PlayAnimation(sf::Texture& texture, int keyFrame);
     void FlipSprite();
     void Movement(const float& deltaTime, InputHandler& inputHandler);
     void ChangeState(InputHandler& inputHandler);
-
-    void PlayAnimation(sf::Texture& texture, int keyFrame);
 };

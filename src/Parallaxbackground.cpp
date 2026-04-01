@@ -23,18 +23,20 @@ ParallexBackground::ParallexBackground() :
         Background("Resources/nature_5/4.png")
     }
 {
-}
+    _rb.resize(3);
 
-void ParallexBackground::Start()
-{
-    _rb = RigidBody(sf::FloatRect({0,675}, {2000,50}), ColliderType::STATIC, ColliderTag::PLATFORM);
     for (int i = 0; i < 3; ++i) {
         // evenly places the background sprites
         _clouds[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
         _trees[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
         _grounds[i].SetPosition(sf::Vector2f(1280 * (i-1), 0.f));
-
+        _rb[i] = RigidBody(sf::FloatRect(sf::Vector2f(1280 * (i-1), 675), {1280, 100}), ColliderType::STATIC, ColliderTag::PLATFORM);
     }
+}
+
+void ParallexBackground::Start()
+{
+
 }
 
 
@@ -88,6 +90,8 @@ void ParallexBackground::Render(sf::RenderWindow& window) {
         tree.Render(window);
     }
     #ifdef _DEBUG
-        _rb.GetCollider().DebugDraw(window);
+        for (auto& rb: _rb) {
+            rb.GetCollider().DebugDraw(window);
+        }
     #endif
 }

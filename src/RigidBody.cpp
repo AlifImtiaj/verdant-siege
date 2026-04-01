@@ -5,8 +5,8 @@ RigidBody::RigidBody(sf::FloatRect bounds, ColliderType type, ColliderTag tag)
 {
 }
 
-void RigidBody::Update() {
+void RigidBody::Update(const float& deltaTime) {
     sf::Vector2f currentPosition = _collider.GetBounds().position;
-    currentPosition += _velocity;
+    currentPosition += _velocity * deltaTime;
     SetPosition(currentPosition);
 }
